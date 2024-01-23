@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Callable
 
+def theuntestedfunction():
+    return "asdufhljkadsfh"
 
 class Comparer(ABC):
     def __init__(self):
