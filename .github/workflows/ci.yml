@@ -19,8 +19,14 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: 3.11.5
-      - name: Install poetry
+      - name: Install requirements
         run: pip install .[test]
+      - name: Lint stuff
+        run:
+          black --check uhura
+          black --check tests
+          flake8 --verbose uhura
+          flake8 --verbose tests
       - name: Launch tests & generate report
         run: pytest --cov
       - name: Coverage comment
