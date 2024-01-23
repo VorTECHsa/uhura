@@ -14,33 +14,39 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up Python
         id: setup-python
         uses: actions/setup-python@v4
         with:
           python-version: 3.11.5
+
       - name: Get pip cache dir
-        id: pip-cache
+        id: get-pip-dir
         run: |
           echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
+
       - name: Restore cached pip
         uses: actions/cache@v4
         id: restore-pip-cache
         with:
-          path: ${{ steps.restore-pip-cache.outputs.dir }}
+          path: ${{ steps.get-pip-dir.outputs.dir }}
           key: ${{ runner.os }}-pip-${{ hashFiles('**/setup.cfg') }}
           restore-keys: |
             ${{ runner.os }}-pip-
+
       - name: Install requirements
         if: steps.cache-pip.outputs.cache-hit != 'true'
         run: pip install .[test]
+
       - name: Save Pip
         id: cache-pip-save
         uses: actions/cache/save@v4
         with:
           path: |
-            ${{ steps.restore-pip-cache.outputs.dir }}
+            ${{ steps.get-pip-dir.outputs.dir }}
           key: ${{ steps.restore-pip-cache.outputs.cache-primary-key }}
+
       - name: Lint stuff
         run: |
           black --check uhura
