@@ -22,7 +22,7 @@ jobs:
       - name: Install requirements
         run: pip install .[test]
       - name: Lint stuff
-        run:
+        run: |
           black --check uhura
           black --check tests
           flake8 --verbose uhura
