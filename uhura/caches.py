@@ -50,7 +50,7 @@ class LocalCache(Cache):
         logger.info(f"Dumping to {self._path}")
 
         if not os.path.exists(os.path.dirname(self._path)):
-            os.makedirs(os.path.dirname(self._path))
+            os.makedirs(os.path.dirname(self._path), exist_ok=True)
         self._serde.write_to_file(self._path, obj)
         return obj
 
