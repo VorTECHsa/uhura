@@ -11,6 +11,7 @@ import pytest
 from uhura.base import Readable, Writable
 from uhura.caches import (
     CachingService,
+    LocalCache,
 )
 from uhura.caching import (
     cache_local_input,
@@ -20,6 +21,7 @@ from uhura.caching import (
 )
 from uhura.functional import uhura_reader, uhura_writer
 from uhura.modes import fixture_builder_mode, task_test_mode
+from uhura.serde import PickleSerde
 
 
 class RandomReadable(Readable[float]):
@@ -293,3 +295,15 @@ def test_cache_key():
         assert (
             DatabaseReader("id1").read() != DatabaseReader("id2").read()
         ), "Cache key being ignored"
+
+
+def test_local_cache_path_renders_path_with_file_extension_from_serde_if_not_present():
+    cache_path = "my/cache/dir"
+    serde = PickleSerde()
+    local_cache = LocalCache(cache_path, serde)
+
+    base_path = "base/path"
+    cache_key = "filename"
+    rendered_path = local_cache.render_path(base_path, cache_key, serde)
+
+    assert rendered_path.split(".")[-1] == "pkl"
