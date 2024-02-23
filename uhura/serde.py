@@ -10,8 +10,8 @@ class Serde(Generic[SerdeType]):
     file_extension: ClassVar[str]
 
     def __init_subclass__(cls) -> None:
-        assert (
-            cls.file_extension is not None
+        assert hasattr(
+            cls, "file_extension"
         ), "Serde implementations must have a valid file_extension"
         return super().__init_subclass__()
 

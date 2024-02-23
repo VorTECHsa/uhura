@@ -51,7 +51,8 @@ def test_can_have_custom_serde():
 
 
 def test_serde_subclass_requires_file_extension():
-    with pytest.raises(AttributeError):
+    with pytest.raises(AssertionError):
+
         class Bad(Serde[Any]):
             def read_from_file(self, file):
                 pass
