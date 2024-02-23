@@ -7,7 +7,7 @@ from inspect import isasyncgenfunction, iscoroutinefunction, isgeneratorfunction
 from typing import Callable, DefaultDict, Optional, Protocol, Type  # ParamSpec
 
 from uhura.composition import async_unit, compose
-from uhura.serde import Serde, DEFAULT_SERDE
+from uhura.serde import DEFAULT_SERDE, Serde
 
 logger = logging.getLogger("uhura.caches")
 
@@ -58,8 +58,17 @@ class LocalCache(Cache):
         return self._serde.read_from_file(self._path)
 
     @classmethod
+    def render_path(cls, base_path: str, cache_key: str, serde: Serde):
+        if not cache_key.endswith(serde.file_extension):
+            cache_key = cache_key + serde.file_extension
+        return os.path.join(base_path, cache_key)
+
+    @classmethod
     def cache_for_instance(cls, cacheable: Cacheable, base_path: str):
-        return cls(os.path.join(base_path, cacheable.cache_key()), cacheable.get_serde())
+        cache_key = cacheable.cache_key()
+        serde = cacheable.get_serde()
+        path = cls.render_path(base_path, cache_key, serde)
+        return cls(path, serde)
 
 
 async def _take(async_iterable, n=5):

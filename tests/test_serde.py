@@ -1,8 +1,12 @@
-from uhura.serde import PickleSerde
+import os
+from tempfile import TemporaryDirectory
+from typing import Any
+
+import pytest
+
 from uhura.base import Readable
 from uhura.modes import fixture_builder_mode, task_test_mode
-from tempfile import TemporaryDirectory
-import os
+from uhura.serde import PickleSerde, Serde
 
 
 class FakeSerde(PickleSerde):
@@ -44,3 +48,14 @@ def test_can_have_custom_serde():
             assert not test_serde.has_been_read
             client.read()
             assert test_serde.has_been_read
+
+
+def test_serde_subclass_requires_file_extension():
+    with pytest.raises(AssertionError):
+
+        class Bad(Serde[Any]):
+            def read_from_file(self, file):
+                pass
+
+            def write_to_file(self, file, obj: Any):
+                pass

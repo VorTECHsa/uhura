@@ -1,5 +1,5 @@
 import pickle
-from typing import TypeVar, Generic, ClassVar, Any
+from typing import Any, ClassVar, Generic, TypeVar
 
 import pandas as pd
 
@@ -8,6 +8,12 @@ SerdeType = TypeVar("SerdeType")
 
 class Serde(Generic[SerdeType]):
     file_extension: ClassVar[str]
+
+    def __init_subclass__(cls) -> None:
+        assert hasattr(
+            cls, "file_extension"
+        ), "Serde implementations must have a valid file_extension"
+        return super().__init_subclass__()
 
     def read_from_file(self, file) -> SerdeType:
         raise NotImplementedError()
