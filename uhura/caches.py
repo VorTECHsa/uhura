@@ -4,10 +4,11 @@ import os
 from abc import abstractmethod
 from collections import defaultdict
 from inspect import isasyncgenfunction, iscoroutinefunction, isgeneratorfunction
-from typing import Callable, DefaultDict, Optional, Protocol, Type  # ParamSpec
+from typing import Callable, DefaultDict, Optional, Type  # ParamSpec
 
 from uhura.composition import async_unit, compose
 from uhura.serde import DEFAULT_SERDE, Serde
+from uhura.base import Cacheable
 
 logger = logging.getLogger("uhura.caches")
 
@@ -23,18 +24,6 @@ class Cache(abc.ABC):
 
     @abstractmethod
     def update(self, obj):
-        raise NotImplementedError()
-
-
-class Cacheable(Protocol):
-    _read_count: Optional[int]  # Created in streaming readables (generators, async iterators etc.)
-
-    def cache_key(self):
-        if hasattr(self, "_read_count"):
-            return os.path.join(self.__class__.__name__, str(self._read_count))
-        return self.__class__.__name__
-
-    def get_serde(self) -> Serde:
         raise NotImplementedError()
 
 

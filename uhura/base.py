@@ -2,17 +2,30 @@ import asyncio
 import os
 from abc import ABC, abstractmethod
 from inspect import isasyncgenfunction, iscoroutinefunction, isgeneratorfunction, unwrap
-from typing import Generic, Type, TypeVar
+from typing import Generic, Type, TypeVar, Optional
 
-from uhura.serde import DEFAULT_SERDE
-from uhura.caches import Cache, LocalCache
+from uhura.serde import DEFAULT_SERDE, Serde
 from uhura.decorables import Decorable
 
 ReadType = TypeVar("ReadType")
 WriteType = TypeVar("WriteType")
 
 
-class Readable(Decorable, ABC, Generic[ReadType]):
+class Cacheable(ABC):
+    _read_count: Optional[int]  # Created in streaming readables (generators, async iterators etc.)
+
+    @abstractmethod
+    def cache_key(self):
+        if hasattr(self, "_read_count"):
+            return os.path.join(self.__class__.__name__, str(self._read_count))
+        return self.__class__.__name__
+
+    @abstractmethod
+    def get_serde(self) -> Serde:
+        raise NotImplementedError()
+
+
+class Readable(Decorable, Cacheable, Generic[ReadType]):
     def __init_subclass__(cls) -> None:
         if isasyncgenfunction(cls.read):
             cls.read = _as_stream_read(cls.read)
@@ -58,7 +71,7 @@ def _as_sync_stream_read(read_method):
     return read
 
 
-class Writable(Decorable, ABC, Generic[WriteType]):
+class Writable(Decorable, Cacheable, Generic[WriteType]):
     @abstractmethod
     async def write(self, obj: WriteType):
         raise NotImplementedError()
