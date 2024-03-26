@@ -1,5 +1,6 @@
 # Uhura  
-  
+[![codecov](https://codecov.io/gh/VorTECHsa/uhura/graph/badge.svg?token=hRFNDYtArs)](https://codecov.io/gh/VorTECHsa/uhura)
+d
 A framework for tackling legacy data engineering code.  
   
 Wrap inputs and outputs for your system and take advantage of asyncio + automated testing.  
