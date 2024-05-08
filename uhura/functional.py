@@ -26,7 +26,7 @@ def uhura_reader(function):
             return function(*self.params.args, **self.params.kwargs)
 
         def cache_key(self):
-            return function.__qualname__
+            return function.__qualname__ + ".pkl"
 
     @wraps(function)
     @match_function_type(function)
@@ -70,7 +70,7 @@ def uhura_writer(function=None, output_arg: Optional[str] = None):
             return function(*self.params.args, **self.params.kwargs)
 
         def cache_key(self):
-            return function.__qualname__
+            return function.__qualname__ + ".pkl"
 
     @wraps(function)
     @match_function_type(function)
