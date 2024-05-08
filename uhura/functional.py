@@ -25,8 +25,7 @@ def uhura_reader(function):
         def read(self):
             return function(*self.params.args, **self.params.kwargs)
 
-        def cache_key(self):
-            return function.__qualname__
+    _SingleFunctionReadable.__name__ = _SingleFunctionReadable.__qualname__ = function.__name__
 
     @wraps(function)
     @match_function_type(function)
@@ -69,8 +68,7 @@ def uhura_writer(function=None, output_arg: Optional[str] = None):
             self.params.arguments[output_arg] = obj
             return function(*self.params.args, **self.params.kwargs)
 
-        def cache_key(self):
-            return function.__qualname__
+    _SingleFunctionWritable.__name__ = _SingleFunctionWritable.__qualname__ = function.__name__
 
     @wraps(function)
     @match_function_type(function)
