@@ -1,6 +1,8 @@
 import os
 import tempfile
 
+import pytest
+
 from uhura.functional import uhura_reader, uhura_writer
 from uhura.modes import fixture_builder_mode
 
@@ -31,3 +33,15 @@ def test_writers_attach_pickle_extension():
         with fixture_builder_mode(known_good_path=output_path, input_path=input_path):
             writable_thing_1("goodbye")
         assert os.path.exists(os.path.join(output_path, f"{writable_thing_1.__qualname__}.pkl"))
+
+
+def test_writer_raises_if_ambiguous():
+    with pytest.raises(ValueError):
+        @uhura_writer
+        def ambiguous_writable(thing: str, other_arg: str):
+            pass
+
+    with pytest.raises(ValueError):
+        @uhura_writer(output_arg="not an argument")
+        def ambiguous_writable(thing: str, other_arg):
+            pass
