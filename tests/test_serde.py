@@ -70,8 +70,10 @@ def test_parquet_serde():
             input_path=os.path.join(root, "input"), known_good_path=os.path.join(root, "output")
         ):
             client = FakeDfReader()
-            client.read()
+            original = client.read()
             assert os.path.exists(os.path.join(root, "input", "FakeDfReader.parquet"))
+            recovered = client.read()
+            assert original.equals(recovered)
 
 
 def test_serde_subclass_requires_file_extension():
