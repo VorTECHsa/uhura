@@ -55,7 +55,12 @@ def test_can_have_custom_serde():
 def test_parquet_serde():
     class FakeDfReader(Readable[pd.DataFrame]):
         def read(self):
-            return pd.DataFrame([{"label": character, "value": number} for number, character in enumerate(string.ascii_letters)])
+            return pd.DataFrame(
+                [
+                    {"label": character, "value": number}
+                    for number, character in enumerate(string.ascii_letters)
+                ]
+            )
 
         def get_serde(self):
             return ParquetSerde()

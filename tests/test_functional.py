@@ -37,11 +37,13 @@ def test_writers_attach_pickle_extension():
 
 def test_writer_raises_if_ambiguous():
     with pytest.raises(ValueError):
+
         @uhura_writer
         def ambiguous_writable(thing: str, other_arg: str):
             pass
 
     with pytest.raises(ValueError):
+
         @uhura_writer(output_arg="not an argument")
         def ambiguous_writable(thing: str, other_arg):
             pass
