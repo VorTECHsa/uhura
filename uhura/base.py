@@ -16,9 +16,7 @@ class Cacheable(ABC):
 
     @abstractmethod
     def cache_key(self):
-        if hasattr(self, "_read_count"):
-            return os.path.join(self.__class__.__name__, str(self._read_count))
-        return self.__class__.__name__
+        raise NotImplementedError()
 
     @abstractmethod
     def get_serde(self) -> Serde:
