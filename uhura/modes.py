@@ -13,13 +13,8 @@ from uhura.caching import (
 from uhura.properties.property_tester import PropertyTester
 from uhura.properties.transformer import Transformer
 
-try:
-    from uhura.pandas_tools import pandas_comparator as default_comparator
-    from uhura.properties.testable_properties import DEFAULT_PROPERTIES
-except ImportError:
-    from uhura.caches import basic_comparator as default_comparator
-
-    DEFAULT_PROPERTIES = tuple()
+from uhura.pandas_tools import pandas_comparator as default_comparator
+from uhura.properties.testable_properties import DEFAULT_PROPERTIES
 
 
 @contextmanager
