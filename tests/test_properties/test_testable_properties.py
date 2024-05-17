@@ -98,6 +98,9 @@ logging.getLogger().setLevel(logging.INFO)
         (properties.preserves_index_types, convert_index_to_int, False),
         (properties.pure, add_random, True),
         (properties.pure, inplace_add_random, False),
+        (properties.preserves_index_identity, drop_rows, False),
+        (properties.preserves_index_identity, convert_index_to_int, False),
+        (properties.preserves_index_identity, convert_to_int, True),
     ],
 )
 def test_decorators(property_test, transformer, expected, base_df):
