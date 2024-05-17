@@ -98,11 +98,24 @@ logging.getLogger().setLevel(logging.INFO)
         (properties.preserves_index_types, convert_index_to_int, False),
         (properties.pure, add_random, True),
         (properties.pure, inplace_add_random, False),
+        (properties.preserves_index_identity, drop_rows, False),
+        (properties.preserves_index_identity, convert_index_to_int, False),
+        (properties.preserves_index_identity, convert_to_int, True),
+        (
+            properties.get_columns_not_modified_property(["a", "c", "d", "missing_col"]),
+            drop_rows,
+            False,
+        ),
+        (
+            properties.get_columns_not_modified_property(["a", "c", "d", "missing_col"]),
+            convert_index_to_int,
+            False,
+        ),
     ],
 )
 def test_decorators(property_test, transformer, expected, base_df):
     result = transformer(base_df) if property_test is not properties.pure else None
-    _, observed = property_test(transformer, arg=base_df, result=result)
+    _, observed, *_ = property_test(transformer, arg=base_df, result=result)
     assert expected == observed
 
 

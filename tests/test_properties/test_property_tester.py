@@ -71,6 +71,12 @@ def test_transformer_test_mode():
     assert dummy_tester.get_results(dummy_transformer_2) == frozenset({"pure"})
 
 
+def test_property_tester_raises_if_asked_for_untracked_transformer():
+    dummy_tester = PropertyTester.create_for_properties([pure, idempotent])
+    with pytest.raises(KeyError):
+        dummy_tester.get_results(dummy_transformer)
+
+
 def test_property_with_notes(base_df, caplog):
     dummy_tester = PropertyTester.create_for_properties([dummy_property_with_notes])
     decorated_tester = dummy_tester.add_properties_to_function(lambda arg: arg)
