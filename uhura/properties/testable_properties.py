@@ -109,7 +109,7 @@ def preserves_types(tested, arg: pd.DataFrame, result: Optional[pd.DataFrame] = 
     result = tested(arg) if result is SENTINEL else result
     end_types = set(result.columns)
     intersection = start_types & end_types
-    return result, (arg[intersection].dtypes == result[intersection].dtypes).all()
+    return result, (arg[list(intersection)].dtypes == result[list(intersection)].dtypes).all()
 
 
 def preserves_index_types(tested, arg: pd.DataFrame, result: Optional[pd.DataFrame] = None):
