@@ -22,7 +22,7 @@ def _get_batched_hash(tested, arg, number_of_batches=5):
 
 
 def create_custom_debugger(
-    notes_creator: Optional[Callable[[pd.DataFrame, Optional[pd.DataFrame]], str]]
+    notes_creator: Optional[Callable[[pd.DataFrame, Optional[pd.DataFrame]], str]],
 ):
     def debugger(tested, arg: pd.DataFrame, result: Optional[pd.DataFrame] = None):
         notes_arg = notes_creator(arg, None) if notes_creator is not None else ""
