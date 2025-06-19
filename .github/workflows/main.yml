@@ -55,7 +55,7 @@ jobs:
           python-version: '3.10'
           cache: "pip"
       - name: Package
-        run: python setup.py sdist bdist_wheel
+        run: python setup.py sdist
         env:
           BUILD_VERSION: ${{ github.ref_name }}
       - name: Publish to pipy
