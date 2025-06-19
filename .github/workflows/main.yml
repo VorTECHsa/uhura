@@ -29,7 +29,7 @@ jobs:
           cache: "pip"
       - run: pip install '.[build]' '.[test]'
       - name: Run tests
-        run: pytest -vv --cov=uhura tests
+        run: pytest -vv --cov=uhura --cov-report=xml tests
       - uses: codecov/test-results-action@v1
         with:
           fail_ci_if_error: true
@@ -46,7 +46,7 @@ jobs:
           BUILD_VERSION: ${{ github.ref_name }}
       - name: Publish to pipy
         env:
-          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+          TWINE_USERNAME: '__token__'
           TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
         run: |
           twine check dist/*
