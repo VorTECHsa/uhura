@@ -45,6 +45,9 @@ jobs:
         env:
           BUILD_VERSION: ${{ github.ref_name }}
       - name: Publish to pipy
+        env:
+          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
         run: |
           twine check dist/*
           twine upload dist/*
