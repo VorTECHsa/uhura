@@ -18,14 +18,16 @@ jobs:
           flake8 --verbose uhura
           flake8 --verbose tests
 
-  test_and_publish:
-    if: startsWith(github.event.ref, 'refs/tags/v')
+  testing:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python_version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v4.1.0
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: ${{ matrix.python_version }}
           cache: "pip"
       - run: pip install '.[build]' '.[test]'
       - name: Run tests
@@ -40,6 +42,18 @@ jobs:
           fail_ci_if_error: true
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    needs:
+      - linting
+
+  publish:
+    if: startsWith(github.event.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: "pip"
       - name: Package
         run: python setup.py sdist bdist_wheel
         env:
@@ -51,6 +65,5 @@ jobs:
         run: |
           twine check dist/*
           twine upload dist/*
-
     needs:
-      - linting
+      - testing
