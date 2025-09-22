@@ -71,7 +71,7 @@ def compare_known_good_output(
             if not cache.exists():
                 raise FileNotFoundError(f"No fixture found for {writable_cls}.")
             expected = cache.get()
-            return comparison[writable_cls.__name__](expected, obj)
+            return comparison[self.cache_key()](expected, obj)
 
         if iscoroutinefunction(writable_cls.write):
             write = async_unit(write)
